@@ -87,4 +87,10 @@ public class UsuarioService {
         }
         return false;
     }
+
+    @Transactional
+    public Optional<UsuarioDTO> findUsuarioByCorreo(String correo) {
+        return usuarioRepo.findByEmail(correo)
+                .map(usuarioMapper::toDTO);
+    }
 }
