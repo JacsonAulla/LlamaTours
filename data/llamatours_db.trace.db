@@ -1,0 +1,4 @@
+2025-07-14 18:45:33.042797-05:00 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "SELECT * FROM PAGOS DESTINOS [*]PAGOS RESERVACIONES"
+Syntax error in SQL statement "SELECT * FROM PAGOS DESTINOS [*]PAGOS RESERVACIONES"; SQL statement:
+SELECT * FROM PAGOS DESTINOS PAGOS RESERVACIONES [42000-232]

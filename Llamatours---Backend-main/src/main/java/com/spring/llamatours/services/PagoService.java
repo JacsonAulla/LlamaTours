@@ -41,30 +41,36 @@ public class PagoService {
 
     @Transactional
     public PagoDTO savePago(PagoDTO pagoDTO){
-        Pago pago=pagoMapper.toEntity(pagoDTO);
+        Pago pago = pagoMapper.toEntity(pagoDTO);
 
-        Reservacion reservacion=reservacionRepo.findById(pagoDTO.getReservacionId())
-                                .orElseThrow(()-> new RuntimeException("Reservacion no encontrada para el pago"));
+        Reservacion reservacion = reservacionRepo.findById(pagoDTO.getReservacionId())
+                                .orElseThrow(() -> new RuntimeException("Reservación no encontrada para el pago"));
 
         if (pagoRepo.findByReservacionId(reservacion.getId()).isPresent()) {
-            throw new RuntimeException("La reservacion ya tiene un pago");
+            throw new RuntimeException("La reservación ya tiene un pago");
         }
-        
-        BigDecimal monto= BigDecimal.valueOf(reservacion.getCantidadPersonas()).multiply(reservacion.getDestino().getPrecio());
+
+        // ✅ Validar monto proveniente del formulario
+        BigDecimal montoEsperado = BigDecimal.valueOf(reservacion.getCantidadPersonas())
+                                .multiply(reservacion.getDestino().getPrecio());
+
+        if (pagoDTO.getMonto() == null || pagoDTO.getMonto().compareTo(montoEsperado) != 0) {
+            throw new RuntimeException("El monto no es válido o fue manipulado.");
+        }
+
         pago.setReservacion(reservacion);
-
         pago.setFechaPago(LocalDate.now());
-        // pago.setMetodoPago(MetodoPago.EFECTIVO);
         pago.setEstado(EstadoPago.PENDIENTE);
-        pago.setMonto(monto);
+        pago.setMonto(pagoDTO.getMonto()); // ← Lo usas del formulario validado
 
-        Pago savedPago= pagoRepo.save(pago);
+        Pago savedPago = pagoRepo.save(pago);
 
         reservacion.setEstado(EstadoReserva.CONFIRMADA);
         reservacionRepo.save(reservacion);
 
         return pagoMapper.toDTO(savedPago);
     }
+
 
     @Transactional
     public PagoDTO updatePago(Long id, PagoDTO pagoDTO){

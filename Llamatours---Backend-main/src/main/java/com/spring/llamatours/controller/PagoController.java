@@ -1,5 +1,6 @@
 package com.spring.llamatours.controller;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -9,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.spring.llamatours.DTOs.PagoDTO;
 import com.spring.llamatours.DTOs.ReservacionDTO;
@@ -157,6 +159,25 @@ public class PagoController {
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error","Error al hacer busqueda por usuario: "+ e.getMessage());
             return "redirect:/pagos/lista";
+        }
+    }
+
+    @GetMapping("/calcularMonto")
+    @ResponseBody
+    public String calcularMontoPorReservacion(@RequestParam Long reservacionId) {
+        try {
+            Optional<PagoDTO> pagoOpt = pagoService.findPagoByReservacionId(reservacionId);
+            if (pagoOpt.isPresent()) {
+                return pagoOpt.get().getMonto().toString();
+            } else {
+                ReservacionDTO reservacion = reservacionService.findReservacionById(reservacionId)
+                    .orElseThrow(() -> new RuntimeException("Reservación no encontrada"));
+                BigDecimal monto = BigDecimal.valueOf(reservacion.getCantidadPersonas())
+                        .multiply(reservacion.getDestino().getPrecio());
+                return monto.toString();
+            }
+        } catch (Exception e) {
+            return "0";
         }
     }
 }
