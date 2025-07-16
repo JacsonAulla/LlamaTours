@@ -102,7 +102,11 @@ public class PagoController {
                 pagoService.updatePago(pagoDTO.getId(), pagoDTO);
                 redirectAttributes.addFlashAttribute("mensaje","Pago actualizado correctamente");
             }
+<<<<<<< HEAD
             return "redirect:/";
+=======
+            return "redirect:/pagos/lista";
+>>>>>>> 0207527d5b204f168fc1f98f81142d5bc97f9fc9
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error","Error al guardar el pago: "+e.getMessage());
             if (pagoDTO.getId()==null) {
