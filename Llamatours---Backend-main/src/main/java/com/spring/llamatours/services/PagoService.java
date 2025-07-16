@@ -104,4 +104,19 @@ public class PagoService {
     public Optional<PagoDTO> findPagoByReservacionId(Long reservacoinId){
         return pagoRepo.findByReservacionId(reservacoinId).map(pagoMapper::toDTO);
     }
+
+    @Transactional
+    public Pago crearPagoPendienteParaReserva(Reservacion reservacion) {
+        Pago pago = new Pago();
+        pago.setReservacion(reservacion);
+        pago.setEstado(EstadoPago.PENDIENTE);
+        pago.setMetodoPago(null);
+        pago.setFechaPago(null);
+
+        BigDecimal monto = reservacion.getDestino().getPrecio()
+                .multiply(BigDecimal.valueOf(reservacion.getCantidadPersonas()));
+        pago.setMonto(monto);
+
+        return pagoRepo.save(pago);
+    }
 }

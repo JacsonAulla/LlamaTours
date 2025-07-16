@@ -3,7 +3,7 @@ package com.spring.llamatours.security;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.Customizer;
+// import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -21,6 +21,7 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/usuarios/registro", "/usuarios/guardar", "/css/**", "/js/**", "/registro", "/login", "/imagenes/**","/h2-console/**", "/contacto", "/nosotros").permitAll()
                 .requestMatchers("/viaje/**").authenticated()
+                .requestMatchers("/perfil").hasRole("USUARIO")
                 .requestMatchers("/usuarios/lista").hasRole("ADMIN")
                 
                 .anyRequest().authenticated()

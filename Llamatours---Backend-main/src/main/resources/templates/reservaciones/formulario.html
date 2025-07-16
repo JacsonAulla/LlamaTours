@@ -106,7 +106,10 @@
                 <button type="submit" class="btn btn-success">
                     <i class="bi bi-check-circle-fill"></i> Guardar Reservación
                 </button>
-                <a href="/reservaciones/lista" class="btn btn-outline-secondary">
+                <a  sec:authorize="hasRole('ROLE_ADMIN')" href="/reservaciones/lista" class="btn btn-outline-secondary">
+                    <i class="bi bi-x-circle"></i> Cancelar
+                </a>
+                <a  sec:authorize="hasRole('ROLE_USUARIO')" href="/" class="btn btn-outline-secondary">
                     <i class="bi bi-x-circle"></i> Cancelar
                 </a>
             </div>

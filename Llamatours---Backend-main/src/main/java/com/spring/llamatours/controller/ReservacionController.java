@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import com.spring.llamatours.DTOs.DestinoDTO;
+// import com.spring.llamatours.DTOs.DestinoDTO;
 import com.spring.llamatours.DTOs.ReservacionDTO;
 import com.spring.llamatours.DTOs.UsuarioDTO;
 import com.spring.llamatours.services.DestinoService;
@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-import org.springframework.security.core.context.SecurityContextHolder;
+// import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.Authentication;
 
 @Controller
@@ -104,9 +104,9 @@ public class ReservacionController {
 
     @PostMapping("/guardar")
     public String guardarReservacion(@Valid @ModelAttribute("reservacion") ReservacionDTO reservacionDTO,
-            BindingResult bioBindingResult,
-            Model model,
-            RedirectAttributes redirectAttributes) {
+                                    BindingResult bioBindingResult,
+                                    Model model,
+                                    RedirectAttributes redirectAttributes) {
         if (bioBindingResult.hasErrors()) {
             Authentication auth = SecurityContextHolder.getContext().getAuthentication();
             boolean esAdmin = auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
@@ -140,7 +140,7 @@ public class ReservacionController {
             if (auth.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"))) {
                 return "redirect:/reservaciones/lista";
             } else {
-                return "redirect:/";
+                return "redirect:/perfil"; // 👈 Cambio clave aquí
             }
 
         } catch (Exception e) {
