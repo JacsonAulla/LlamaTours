@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-LlamatoursApplication<llamatours>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.spring.llamatours.LlamatoursApplication",
+            "projectName": "llamatours",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
