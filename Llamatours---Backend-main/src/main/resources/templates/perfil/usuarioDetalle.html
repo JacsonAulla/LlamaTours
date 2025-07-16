@@ -36,23 +36,23 @@
             </tr>
         </thead>
         <tbody>
-        <<tr th:each="item : ${reservasConPago}">
-            <td th:text="${item.reserva.destino.titulo}">Destino</td>
-            <td th:text="${item.reserva.fechaReserva}">Fecha</td>
-            <td th:text="${item.reserva.cantidadPersonas}">Personas</td>
-            <td th:text="${item.reserva.estado}">Estado</td>
-            <td th:text="${item.pago != null ? item.pago.monto : 'S/.0.00'}">Monto</td>
-            <td th:text="${item.pago != null ? item.pago.estado : 'Sin pago'}">Estado pago</td>
-            <td>
-                <form th:action="@{/pagos/registro}" method="post" th:if="${item.pago != null and item.pago.estado.name() == 'PENDIENTE'}">
-                    <input type="hidden" name="pagoId" th:value="${item.pago.id}" />
-                    <input type="hidden" name="metodoPago" value="TRANSFERENCIA" />
-                    <input type="hidden" name="estado" value="COMPLETADO" />
-                    <button type="submit">Pagar</button>
-                </form>
-                <span th:if="${item.pago != null and item.pago.estado.name() != 'PENDIENTE'}">✔ Pagado</span>
-            </td>
-        </tr>
+            <tr th:each="item : ${reservasConPago}">
+                <td th:text="${item.reserva.destino.titulo}">Destino</td>
+                <td th:text="${item.reserva.fechaReserva}">Fecha</td>
+                <td th:text="${item.reserva.cantidadPersonas}">Personas</td>
+                <td th:text="${item.reserva.estado}">Estado</td>
+                <td th:text="${item.pago != null ? item.pago.monto : 'S/.0.00'}">Monto</td>
+                <td th:text="${item.pago != null ? item.pago.estado : 'Sin pago'}">Estado pago</td>
+                <td>
+                    <form th:action="@{/pagos/registro}" method="get" th:if="${item.pago == null or item.pago.estado.name() == 'PENDIENTE'}">
+                        <input type="hidden" name="reservacionId" th:value="${item.reserva.id}" />
+                        <button type="submit" class="btn btn-sm btn-primary">
+                            <i class="bi bi-credit-card"></i> Pagar
+                        </button>
+                    </form>
+                    <span th:if="${item.pago != null and item.pago.estado.name() != 'PENDIENTE'}">✔ Pagado</span>
+                </td>
+            </tr>
         </tbody>
     </table>
 </main>

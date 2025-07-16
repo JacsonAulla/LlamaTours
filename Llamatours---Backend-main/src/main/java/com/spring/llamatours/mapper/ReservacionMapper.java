@@ -1,5 +1,9 @@
 package com.spring.llamatours.mapper;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.stereotype.Component;
 
 import com.spring.llamatours.DTOs.DestinoDTO;
@@ -64,5 +68,13 @@ public class ReservacionMapper {
         entity.setNombresPasajeros(dto.getNombresPasajeros());
         entity.setEstado(dto.getEstado() != null ? EstadoReserva.valueOf(dto.getEstado()) : null);
         return entity;
+    }
+    public List<ReservacionDTO> toDTOList(List<Reservacion> entities) {
+        if (entities == null || entities.isEmpty()) {
+            return Collections.emptyList();
+        }
+        return entities.stream()
+                .map(this::toDTO)
+                .collect(Collectors.toList());
     }
 }

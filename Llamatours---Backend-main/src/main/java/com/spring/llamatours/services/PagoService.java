@@ -73,15 +73,23 @@ public class PagoService {
 
 
     @Transactional
-    public PagoDTO updatePago(Long id, PagoDTO pagoDTO){
-        Pago pagoExiste= pagoRepo.findById(id)
-                        .orElseThrow(()-> new RuntimeException("Pago no encontrrado"));
-        // pagoExiste.setMonto(pagoDTO.getMonto());
-        pagoExiste.setMetodoPago(pagoDTO.getMetodoPago()!=null?MetodoPago.valueOf(pagoDTO.getMetodoPago()):null);
-        pagoExiste.setEstado(pagoDTO.getEstado()!=null?EstadoPago.valueOf(pagoDTO.getEstado()):null);
-        // pagoExiste.setFechaPago(pagoDTO.getFechaPago());
+    public PagoDTO updatePago(Long id, PagoDTO pagoDTO) {
+        Pago pagoExiste = pagoRepo.findById(id)
+            .orElseThrow(() -> new RuntimeException("Pago no encontrado"));
 
-        Pago updatedPago= pagoRepo.save(pagoExiste);
+        if (pagoDTO.getMetodoPago() != null && !pagoDTO.getMetodoPago().isBlank()) {
+            pagoExiste.setMetodoPago(MetodoPago.valueOf(pagoDTO.getMetodoPago()));
+        }
+        pagoExiste.setEstado(EstadoPago.COMPLETADO);
+
+        pagoExiste.setFechaPago(LocalDate.now());
+
+        Pago updatedPago = pagoRepo.save(pagoExiste);
+
+        Reservacion reservacion = pagoExiste.getReservacion();
+        reservacion.setEstado(EstadoReserva.CONFIRMADA);
+        reservacionRepo.save(reservacion);
+
         return pagoMapper.toDTO(updatedPago);
     }
 

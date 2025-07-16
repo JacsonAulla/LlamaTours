@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.spring.llamatours.DTOs.PagoDTO;
 import com.spring.llamatours.DTOs.ReservacionDTO;
 import com.spring.llamatours.DTOs.UsuarioDTO;
+import com.spring.llamatours.mapper.PagoMapper;
+import com.spring.llamatours.model.Pago;
+import com.spring.llamatours.repos.PagoRepo;
 import com.spring.llamatours.services.PagoService;
 import com.spring.llamatours.services.ReservacionService;
 import com.spring.llamatours.services.UsuarioService;
@@ -37,6 +40,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 @RequiredArgsConstructor
 public class PagoController {
     private final PagoService pagoService;
+    private final PagoRepo pagoRepo;
+    private final PagoMapper pagoMapper;
     private final UsuarioService usuarioService;
     private final ReservacionService reservacionService;
 
@@ -66,12 +71,18 @@ public class PagoController {
     }
     
     @GetMapping("/registro")
-    public String mostrarFormularioRegistro(Model model) {
-        // List<UsuarioDTO> usuarios= usuarioService.findAllUsuarios();
-        List<ReservacionDTO> reservaciones= reservacionService.findAllReservaciones();
-        model.addAttribute("pago", new PagoDTO());
-        // model.addAttribute("usuarios", usuarios);
-        model.addAttribute("reservaciones", reservaciones);
+    public String mostrarFormularioRegistro(@RequestParam(required = false) Long reservacionId, Model model) {
+        PagoDTO pagoDTO = new PagoDTO();
+
+        if (reservacionId != null) {
+            Pago pago = pagoRepo.findByReservacionId(reservacionId)
+                .orElseThrow(() -> new RuntimeException("Pago no encontrado"));
+            pagoDTO = pagoMapper.toDTO(pago);
+        }
+
+        model.addAttribute("pago", pagoDTO);
+        model.addAttribute("reservaciones", reservacionService.findAllReservaciones());
+
         return "pagos/formulario";
     }
     
@@ -80,6 +91,7 @@ public class PagoController {
         if (bindingResult.hasErrors()) {
             model.addAttribute("pago", pagoDTO);
             model.addAttribute("reservaciones", reservacionService.findAllReservaciones());
+            System.out.println(">>>>>>>>>>>>>>>>>>>>>>>>>>"+bindingResult);
             return "pagos/formulario";
         }
         try {
