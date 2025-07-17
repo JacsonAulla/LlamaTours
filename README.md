@@ -1,5 +1,6 @@
 autores:
 -Choque Sebastian, Raul Benito
+
 -Aulla Gonzales, Jacson Michael 
 
 descargar el zip o clonar el respoitorio en git destock.
